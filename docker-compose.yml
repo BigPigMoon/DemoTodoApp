@@ -1,0 +1,24 @@
+version: '3.5'
+
+services:
+  user-db:
+    container_name: user-db
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=user-db
+    volumes:
+       - user-db-data:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - nat
+    restart: unless-stopped
+
+networks:
+  nat:
+    driver: bridge
+
+volumes:
+    user-db-data:
