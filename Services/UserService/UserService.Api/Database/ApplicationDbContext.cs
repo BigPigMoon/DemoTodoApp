@@ -8,6 +8,11 @@ namespace UserService.Database
     {
         public DbSet<User> Users { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("userService");
+        }
+
         public override int SaveChanges()
         {
             var entries = ChangeTracker.Entries<BaseEntity>();

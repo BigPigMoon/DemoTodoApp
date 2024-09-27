@@ -8,7 +8,7 @@ using UserService.Services;
 namespace UserService.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class UserController(UsersService usersService, IMapper mapper) : ControllerBase
 {
     [HttpGet]
