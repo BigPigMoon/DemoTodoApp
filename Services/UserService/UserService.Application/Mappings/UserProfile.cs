@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using UserService.DTO.Requests;
-using UserService.DTO.Responses;
-using UserService.Entities;
+using UserService.Application.DTO.Requests;
+using UserService.Application.DTO.Responses;
+using UserService.Domain.Entities;
 
-namespace UserService.Mappings
+namespace UserService.Api.App.Mappings
 {
     public class UserProfile : Profile
     {

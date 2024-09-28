@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using UserService.DTO.Requests;
-using UserService.DTO.Responses;
-using UserService.Entities;
-using UserService.Services;
+using UserService.Application.DTO.Requests;
+using UserService.Application.DTO.Responses;
+using UserService.Application.Interfaces;
+using UserService.Domain.Entities;
 
-namespace UserService.Controllers;
+namespace UserService.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController(UsersService usersService, IMapper mapper) : ControllerBase
+public class UserController(IUsersService usersService, IMapper mapper) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserResponse>>> GetAllUsersAsync()

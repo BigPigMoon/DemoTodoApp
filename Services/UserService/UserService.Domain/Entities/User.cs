@@ -1,6 +1,6 @@
 ﻿using Common.Database;
 
-namespace UserService.Entities;
+namespace UserService.Domain.Entities;
 
 public class User : BaseEntity
 {
