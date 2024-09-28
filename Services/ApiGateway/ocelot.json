@@ -1,0 +1,67 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/user",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/user",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "user-service",
+          "Port": 3000
+        }
+      ],
+      "Key": "Users"
+    },
+    {
+      "UpstreamPathTemplate": "/api/todo",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/todo",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "todo-service",
+          "Port": 3002
+        }
+      ],
+      "key": "Todos"
+    },
+    {
+      "UpstreamPathTemplate": "/api/user/{catchAll}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Patch" ],
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/user/{catchAll}",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "user-service",
+          "Port": 3000
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/todo/{catchAll}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Patch" ],
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/todo/{catchAll}",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "todo-service",
+          "Port": 3002
+        }
+      ]
+    }
+  ],
+  "Aggregates": [
+    {
+      "UpstreamPathTemplate": "/api/user-todo",
+      "RouteKeys": [
+        "Users",
+        "Todos",
+      ],
+      "Aggregator": "UserTodoAggregator"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5000"
+  }
+}
