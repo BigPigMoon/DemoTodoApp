@@ -1,15 +1,25 @@
-﻿using UserService.Application.Interfaces;
+﻿using AutoMapper;
+using Common.Contracts;
+using MassTransit;
+using UserService.Application.Interfaces;
 using UserService.Domain.Entities;
 
 namespace UserService.Application.Services;
 
-public class UsersService(IUserRepository userRepository) : IUsersService
+public class UsersService(IUserRepository userRepository, IBus bus, IMapper mapper) : IUsersService
 {
     private readonly IUserRepository _userRepository = userRepository;
+    private readonly IBus _bus = bus;
+    private readonly IMapper _mapper = mapper;
 
     public async Task<User> CreateNewUserAsync(User user, CancellationToken cancellationToken = default)
     {
-        return await _userRepository.CreateAsync(user, cancellationToken);
+        var newUser = await _userRepository.CreateAsync(user, cancellationToken);
+
+        var message = _mapper.Map<UserCreated>(newUser);
+        await _bus.Publish(message, cancellationToken);
+
+        return newUser;
     }
 
     public async Task<IEnumerable<User>> GetUsersAsync(CancellationToken cancellationToken = default)
@@ -25,5 +35,6 @@ public class UsersService(IUserRepository userRepository) : IUsersService
     public async Task DeleteUserAsync(Guid id, CancellationToken cancellationToken = default)
     {
         await _userRepository.DeleteAsync(id, cancellationToken);
+        await _bus.Publish(new UserDeleted { Id = id }, cancellationToken);
     }
 }

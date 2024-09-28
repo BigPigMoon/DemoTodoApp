@@ -4,8 +4,8 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 3000
+EXPOSE 3001
 
 
 # This stage is used to build the service project
@@ -13,7 +13,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Services/UserService/UserService.Api/UserService.Api.csproj", "Services/UserService/UserService.Api/"]
-RUN dotnet restore "./Services/UserService/UserService.Api/UserService.Api.csproj"
+RUN dotnet restore "Services/UserService/UserService.Api/UserService.Api.csproj"
 COPY . .
 WORKDIR "/src/Services/UserService/UserService.Api"
 RUN dotnet build "./UserService.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build

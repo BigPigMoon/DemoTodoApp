@@ -1,5 +1,6 @@
 ﻿using Common.Database;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using TodoService.Domain.Entities;
 
 namespace TodoService.Infrastructure.Database
@@ -11,7 +12,11 @@ namespace TodoService.Infrastructure.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
             modelBuilder.HasDefaultSchema("todoService");
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public override int SaveChanges()

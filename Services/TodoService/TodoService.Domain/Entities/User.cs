@@ -4,6 +4,6 @@ namespace TodoService.Domain.Entities
 {
     public class User : BaseEntity
     {
-        public virtual IEnumerable<Todo> Todos { get; set; } = [];
+        public ICollection<Todo> Todos { get; set; } = [];
     }
 }

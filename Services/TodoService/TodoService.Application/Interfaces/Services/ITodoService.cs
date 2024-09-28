@@ -8,6 +8,7 @@ public interface ITodosService
     Task<IEnumerable<Todo>> GetTodosByStatusAsync(TodoStatus status, CancellationToken cancellationToken = default);
     Task<IEnumerable<Todo>> GetUserTodosAsync(Guid userId, CancellationToken cancellationToken = default);
     Task<Todo> CreateTodoAsync(Todo todo, CancellationToken cancellationToken = default);
+    Task<Todo> UpdateTodoAsync(Todo todo, CancellationToken cancellationToken = default);
     Task<Todo> SetTodoStatusAsync(Guid id, TodoStatus status, CancellationToken cancellationToken = default);
     Task DeleteTodoAsync(Guid id, CancellationToken cancellationToken = default);
 }

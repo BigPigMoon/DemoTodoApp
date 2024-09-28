@@ -1,8 +1,8 @@
 ﻿namespace Common.Contracts;
 
-public interface UserCreated
+public record UserCreated
 {
-    Guid Id { get; set; }
-    string Nickname { get; set; }
-    DateTime CreatedAt { get; set; }
+    public Guid Id { get; init; }
+    public string Nickname { get; init; } = string.Empty;
+    public DateTime CreatedAt { get; init; }
 }

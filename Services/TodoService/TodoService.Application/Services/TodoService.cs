@@ -16,14 +16,14 @@ public class TodosService(ITodoRepository todoRepository, IUserRepository userRe
 
     public async Task<IEnumerable<Todo>> GetTodosByStatusAsync(TodoStatus status, CancellationToken cancellationToken = default)
     {
-        return await _todoRepository.GetTodosWithStatus(status, cancellationToken);
+        return await _todoRepository.GetTodosByStatusAsync(status, cancellationToken);
     }
 
     public async Task<IEnumerable<Todo>> GetUserTodosAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        _ = await _userRepository.GetByIdAsync(userId, cancellationToken) ?? throw new KeyNotFoundException("User by id not found");
+        _ = await _userRepository.GetByIdAsync(userId, cancellationToken) ?? throw new KeyNotFoundException($"User by {userId} not found");
 
-        return await _todoRepository.GetUserTodos(userId, cancellationToken);
+        return await _todoRepository.GetUserTodosAsync(userId, cancellationToken);
     }
 
     public async Task<Todo> CreateTodoAsync(Todo todo, CancellationToken cancellationToken = default)
@@ -36,8 +36,24 @@ public class TodosService(ITodoRepository todoRepository, IUserRepository userRe
         await _todoRepository.DeleteAsync(id, cancellationToken);
     }
 
-    public Task<Todo> SetTodoStatusAsync(Guid id, TodoStatus status, CancellationToken cancellationToken = default)
+    public async Task<Todo> SetTodoStatusAsync(Guid id, TodoStatus status, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var todo = await _todoRepository.GetByIdAsync(id, cancellationToken) ?? throw new KeyNotFoundException($"Todo by {id} not found");
+        todo.Status = status;
+        await _todoRepository.UpdateAsync(todo, cancellationToken);
+
+        return todo;
+    }
+
+    public async Task<Todo> UpdateTodoAsync(Todo item, CancellationToken cancellationToken = default)
+    {
+        var todo = await _todoRepository.GetByIdAsync(item.Id, cancellationToken) ?? throw new KeyNotFoundException($"Todo by {item.Id} not found");
+        todo.Title = item.Title;
+        todo.Deadline = item.Deadline;
+        todo.UserId = item.UserId;
+
+        await _todoRepository.UpdateAsync(todo, cancellationToken);
+
+        return todo;
     }
 }

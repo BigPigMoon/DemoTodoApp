@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TodoService.Infrastructure.Database;
 using TodoService.Application;
 using TodoService.Infrastructure;
+using TodoService.Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,11 +24,11 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+app.UseSwagger();
+app.UseSwaggerUI();
+//}
 
 app.UseHttpsRedirection();
 

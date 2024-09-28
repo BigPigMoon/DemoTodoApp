@@ -17,18 +17,53 @@ services:
     restart: unless-stopped
 
   rabbitmq:
-    image: rabbitmq:3.10.7-management
-    hostname: rabbitmq
-    restart: always
-    environment:
-      - RABBITMQ_DEFAULT_USER=rmuser
-      - RABBITMQ_DEFAULT_PASS=rmpassword
-      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}] disk_free_limit 2147483648
-    volumes:
-      - rabbitmq:/var/lib/rabbitmq
+    image: masstransit/rabbitmq
+    container_name: rabbitmq
     ports:
-      - 15672:15672
-      - 5672:5672
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: always
+    networks:
+      - nat
+
+  user-service:
+    depends_on:
+      todo-app-db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    container_name: user-service
+    ports:
+      - "3000:3000"
+    build:
+      context: .
+      dockerfile: Services/UserService/UserService.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:3000
+    networks:
+      - nat
+
+  todo-service:
+    depends_on:
+      todo-app-db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    container_name: todo-service
+    ports:
+      - "3002:3002"
+    build:
+      context: .
+      dockerfile: Services/TodoService/TodoService.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:3002
     networks:
       - nat
 
