@@ -1,5 +1,6 @@
 ﻿using ApiGateway.Entities;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Ocelot.Middleware;
 using Ocelot.Multiplexer;
 using System.Net;
@@ -30,7 +31,10 @@ public class UserTodoAggregator : IDefinedAggregator
         }
 
         return new DownstreamResponse(
-            new StringContent(JsonConvert.SerializeObject(users), System.Text.Encoding.UTF8, "application/json"),
+            new StringContent(JsonConvert.SerializeObject(users, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }), System.Text.Encoding.UTF8, "application/json"),
             HttpStatusCode.OK,
             responses.SelectMany(x => x.Headers).ToList(),
             "reason");
